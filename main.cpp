@@ -11,12 +11,7 @@ int main(int argc, char *argv[])
     //MultiGame board;
     //Board board;
     //SingleGame board ;
-    QMessageBox::StandardButton ret ;
-    ret = QMessageBox::question(NULL,"server or client","as server");
-    bool server = false ;
-    if(ret == QMessageBox::Yes){
-        server = true ;
-    }
+
     MultiGame board;
     board.show();
     return a.exec();

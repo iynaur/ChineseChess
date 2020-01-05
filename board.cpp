@@ -166,11 +166,12 @@ void Board::paintEvent(QPaintEvent *){
         drawStone(i,pen);
     }
 
-    pen.setPen(Qt::red);
+    QPen line( QBrush(Qt::red), 3);
+    pen.setPen(line);
     for (int i = 0; i < m_canMove.size(); ++i)
         for (int j = 0; j < m_canMove[i].size(); ++j)
         {
-            if (m_canMove[i][j]) drawPostion((i+1)*d,(j +1)*d,2*r,pen);
+            if (m_canMove[i][j]) drawPostion((i+1)*d,(j +1)*d,r,pen);
         }
 }
 
