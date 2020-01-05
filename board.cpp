@@ -633,10 +633,8 @@ void Board::tryMoveStone(int killid, int row, int col){
     }
     else
     {
-        this->selected = killid ;
-        initCanMove();
-        update();
-        update();
+        this->selected = -1;
+        click(killid, row, col);
     }
 }
 void Board::moveStone(int moveid, int killid, int row, int col){
