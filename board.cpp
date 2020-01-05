@@ -166,13 +166,16 @@ void Board::paintEvent(QPaintEvent *){
         drawStone(i,pen);
     }
 
-    QPen line( QBrush(Qt::red), 3);
-    pen.setPen(line);
-    for (int i = 0; i < m_canMove.size(); ++i)
-        for (int j = 0; j < m_canMove[i].size(); ++j)
-        {
-            if (m_canMove[i][j]) drawPostion((i+1)*d,(j +1)*d,r,pen);
-        }
+    if (!m_bHasMoved)
+    {
+        QPen line( QBrush(Qt::red), 3);
+        pen.setPen(line);
+        for (int i = 0; i < m_canMove.size(); ++i)
+            for (int j = 0; j < m_canMove[i].size(); ++j)
+            {
+                if (m_canMove[i][j]) drawPostion((i+1)*d,(j +1)*d,r,pen);
+            }
+    }
 }
 
 QPoint& Board::getRowCol(QPoint &pen){
@@ -608,6 +611,7 @@ void Board::click(int id, int row, int col){
     if(this->selected == -1)
     {
         trySelectStone(id);
+        m_bHasMoved = false;
         initCanMove();
         update();
     }
@@ -630,6 +634,7 @@ void Board::tryMoveStone(int killid, int row, int col){
         moveStone(selected, killid, row, col);
         restartGame();
         selected = -1;
+        m_bHasMoved = true;
         update();
     }
     else

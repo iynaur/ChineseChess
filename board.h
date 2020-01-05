@@ -59,6 +59,7 @@ protected:
     QVector<Step *> steps ;
 
     std::vector<std::vector<bool>> m_canMove;
+    bool m_bHasMoved = false;
 
 private:
     void drawPostion(int x ,int y,int r,QPainter &pen);
