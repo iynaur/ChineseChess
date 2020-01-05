@@ -13,6 +13,8 @@ Board::Board(QWidget *parent) : QWidget(parent)
     bRedTurn = true ; //red first
     initStone();
     this->setWindowTitle(QString("中国象棋"));
+
+    m_canMove = std::vector< std::vector <bool>> (8, std::vector <bool>(9, false));
 }
 void Board::drawPostion(int x, int y,int r ,QPainter &pen){
     if(x == d){
@@ -44,6 +46,7 @@ void Board::drawPostion(int x, int y,int r ,QPainter &pen){
     }
 }
 void Board::initStone(){
+    //9 * 10
     bRedTurn = true ; //red first
     //0-15 is red
     stone[0] = Stone(d,10*d,0,false,Stone::RED,Stone::REDCHE);
@@ -160,6 +163,13 @@ void Board::paintEvent(QPaintEvent *){
     for(int i = 0 ; i < 32 ; i++){
         drawStone(i,pen);
     }
+
+    pen.setPen(Qt::red);
+    for (int i = 0; i < m_canMove.size(); ++i)
+        for (int j = 0; j < m_canMove[i].size(); ++j)
+        {
+            if (m_canMove[i][j]) drawPostion((i+1)*d,(j +1)*d,r,pen);
+        }
 }
 
 QPoint& Board::getRowCol(QPoint &pen){
@@ -186,6 +196,47 @@ bool Board::isRegularMovement(int selectid, int row, int col, int killid){
     if(stone[selectid].color == stone[killid].color){
         this->selected = killid ;
         update();
+        return false ;
+    }
+
+    switch(stone[selectid].type){
+    case Stone::JIANG:
+    case Stone::SHUAI:{
+        return isRegularMoveBoss(selectid,row,col);
+    }
+    case Stone::REDCHE:
+    case Stone::BLACKCHE:{
+        return isRegularMoveCHE(selectid,row,col);
+    }
+    case Stone::REDMA:
+    case Stone::BLACKMA:{
+        return isRegularMoveMa(selectid,row,col);
+    }
+    case Stone::REDXIANG:
+    case Stone::BLACKXIANG:{
+        return isRegularMoveXiang(selectid,row,col);
+    }
+    case Stone::REDSHI:
+    case Stone::BLACKSHI:{
+        return isRegularMoveShi(selectid,row,col);
+    }
+    case Stone::BING:
+    case Stone::ZU:{
+        return isRegularMoveSoldier(selectid,row,col);
+    }
+    case Stone::REDPAO:
+    case Stone::BLACKPAO:{
+        return isRegularMovePao(selectid,row,col,killid);
+    }
+    default:
+        return false;
+    }
+    //return true ;
+}
+
+bool Board::isRealRegularMovement(int selectid, int row, int col, int killid)
+{
+    if(stone[selectid].color == stone[killid].color){
         return false ;
     }
 
@@ -496,6 +547,24 @@ void Board::back(Step *step){
     moveStone(step->_moveid, step->_rowFrom, step->_colFrom);
 }
 
+void Board::initCanMove(int id)
+{
+    m_canMove = std::vector< std::vector <bool>> (9, std::vector <bool>(10, false));
+
+    for (int i= 0; i < m_canMove.size(); ++i)
+        for (int j = 0; j < m_canMove[i].size(); ++j)
+        {
+            int row = (i+1)*d;
+            int col = (j+1)*d;
+
+            int id = getStoneId(row, col);
+            m_canMove[i][j] = isRealRegularMovement(selected,row,col,id);
+
+        }
+
+
+}
+
 void Board::backOne(){
     if(!steps.isEmpty()){
         Step* step = this->steps.last();
@@ -537,6 +606,8 @@ void Board::click(int id, int row, int col){
     if(this->selected == -1)
     {
         trySelectStone(id);
+        initCanMove(id);
+        update();
     }
     else
     {

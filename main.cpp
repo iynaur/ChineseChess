@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     if(ret == QMessageBox::Yes){
         server = true ;
     }
-    NetGame board(server);
+    MultiGame board;
     board.show();
     return a.exec();
 }

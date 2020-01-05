@@ -48,7 +48,7 @@ QString Stone::getSoneName(){
     }
 }
 int Stone::getRow(){
-    return this->row;
+    return this->row;//col acturely
 }
 int Stone::getCol(){
     return this->col;
