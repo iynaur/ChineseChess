@@ -194,8 +194,7 @@ QPoint& Board::getRowCol(QPoint &pen){
 
 bool Board::isRegularMovement(int selectid, int row, int col, int killid){
     if(stone[selectid].color == stone[killid].color){
-        this->selected = killid ;
-        update();
+
         return false ;
     }
 
@@ -547,7 +546,7 @@ void Board::back(Step *step){
     moveStone(step->_moveid, step->_rowFrom, step->_colFrom);
 }
 
-void Board::initCanMove(int id)
+void Board::initCanMove()
 {
     m_canMove = std::vector< std::vector <bool>> (9, std::vector <bool>(10, false));
 
@@ -606,7 +605,7 @@ void Board::click(int id, int row, int col){
     if(this->selected == -1)
     {
         trySelectStone(id);
-        initCanMove(id);
+        initCanMove();
         update();
     }
     else
@@ -628,6 +627,13 @@ void Board::tryMoveStone(int killid, int row, int col){
         moveStone(selected, killid, row, col);
         restartGame();
         selected = -1;
+        update();
+    }
+    else
+    {
+        this->selected = killid ;
+        initCanMove();
+        update();
         update();
     }
 }

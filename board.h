@@ -49,7 +49,7 @@ public:
     void reliveStone(int id);
     void backOne();
     void back(Step *step);
-    void initCanMove(int id);
+    void initCanMove();
 
 protected:
     Stone stone[32];
