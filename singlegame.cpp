@@ -118,7 +118,9 @@ void SingleGame::unfakeMove(Step *step){
 }
 int SingleGame::calScore(){
     //enum TYPE{JIANG,SHUAI,BING,ZU,REDPAO,BLACKPAO,REDCHE,BLACKCHE,REDMA,BLACKMA,BLACKXIANG,REDXIANG,REDSHI,BLACKSHI};
-    static int chessScore[] = {15000,15000,200,200,501,501,1000,1000,499,499,100,100,100,100};
+  int pao = 699;//pao will not eat ma if pao >= ma + zu when level = 4
+  int ma = 499;
+    static int chessScore[] = {15000,15000,200,200,pao,pao,1000,1000,499,499,100,100,100,100};
     int redScore = 0 ;
     int blackScore = 0 ;
 
