@@ -50,12 +50,12 @@ public:
     void backOne();
     void back(Step *step);
     void initCanMove();
+    bool bRedTurn ;
 
 protected:
     Stone stone[32];
     int selected ;
     int d ;
-    bool bRedTurn ;
     QVector<Step *> steps ;
 
     std::vector<std::vector<bool>> m_canMove;

@@ -39,7 +39,7 @@
      <item>
       <widget class="QPushButton" name="pushButton_3">
        <property name="text">
-        <string>网络对战服务器端</string>
+        <string>人机对战(black)</string>
        </property>
       </widget>
      </item>
@@ -53,8 +53,6 @@
     </layout>
    </item>
   </layout>
-  <zorder>layoutWidget</zorder>
-  <zorder>widget</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

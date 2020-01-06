@@ -4,6 +4,8 @@
 #include <numeric>
 #include <QTimer>
 #include <iostream>
+#include <QPainter>
+
 SingleGame::SingleGame(QWidget *parent) : Board(parent){
     this->level = 4 ;
     QBoxLayout * layout = new QBoxLayout(QBoxLayout::RightToLeft);
@@ -24,14 +26,50 @@ void SingleGame::click(int id, int row, int col){
     Board::click(id,row,col);
 
     if(!this->bRedTurn)
-        QTimer::singleShot(100, this, SLOT(computerMove()));
+      QTimer::singleShot(100, this, SLOT(computerMove()));
+}
+
+void SingleGame::paintEvent(QPaintEvent *e)
+{
+    Board::paintEvent(e);
+    //draw last move
+    if (m_lastMove){
+      auto drawStone =[this](int id){
+        QPainter pen(this);
+        if(!stone[id].getIsDead()){
+
+          pen.setBrush(Qt::gray);
+          QFont serifFont("Times", 20, QFont::Bold);
+          pen.setFont(serifFont);
+          if(stone[id].color == Stone::RED){
+            pen.setPen(Qt::red);
+            pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2,d/2);
+            pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-1,d/2-1);
+            pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-2,d/2-2);
+            pen.drawText(QRectF(stone[id].getRow()-20,stone[id].getCol()-20,40,40),Qt::AlignCenter,stone[id].getSoneName());
+          }else{
+            pen.setPen(Qt::black);
+            pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2,d/2);
+            pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-1,d/2-1);
+            pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-2,d/2-2);
+            pen.drawText(QRectF(stone[id].getRow()-20,stone[id].getCol()-20,40,40),Qt::AlignCenter,stone[id].getSoneName());
+          }
+        }
+      };
+      drawStone(m_lastMove->_moveid);
+    }
+
 }
 void SingleGame::computerMove(){
-    Step * step = this->getBestMove();
-    this->moveStone(step->_moveid, step->_killid, step->_rowTo, step->_colTo);
+  if (m_lastMove)
+  {
+    delete m_lastMove;
+    m_lastMove = nullptr;
+  }
+    m_lastMove = this->getBestMove();
+    this->moveStone(m_lastMove->_moveid, m_lastMove->_killid, m_lastMove->_rowTo, m_lastMove->_colTo);
     this->restartGame();
     selected = -1;
-    delete step ;
     update();
 }
 

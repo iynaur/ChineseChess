@@ -34,3 +34,11 @@ void MainWidget::on_pushButton_2_clicked()
     ui->widget = new SingleGame(this);
     ui->widget->setVisible(true);
 }
+
+void MainWidget::on_pushButton_3_clicked()
+{
+  on_pushButton_2_clicked();
+  SingleGame* sin = dynamic_cast<SingleGame*>(ui->widget);
+  sin->bRedTurn = !sin->bRedTurn;
+  sin->computerMove();
+}

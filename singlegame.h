@@ -14,6 +14,7 @@ public:
 
     void back();
     void click(int id, int row, int col);
+    void paintEvent(QPaintEvent *) override;
 
     Step* getBestMove();
     void getALLPossibleMove(QVector<Step *> & );
@@ -26,6 +27,7 @@ public:
 
 private:
     int level ;
+    Step* m_lastMove = nullptr;
 
 signals:
 
