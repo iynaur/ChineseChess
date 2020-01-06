@@ -8,12 +8,6 @@
 
 SingleGame::SingleGame(QWidget *parent) : Board(parent){
     this->level = 4 ;
-    QBoxLayout * layout = new QBoxLayout(QBoxLayout::RightToLeft);
-    QPushButton *back = new QPushButton("Back");
-    layout->setContentsMargins(10*d,200,50,200);
-    layout->addWidget(back);
-    this->setLayout(layout);
-    connect(back, SIGNAL(clicked()), this, SLOT(slotBack()));
 }
 SingleGame::~SingleGame(){
 

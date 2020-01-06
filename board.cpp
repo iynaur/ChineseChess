@@ -3,7 +3,7 @@
 #include<QMouseEvent>
 #include<iostream>
 #include<QVector>
-#include<QMessageBox>
+#include<QtWidgets>
 
 Board::Board(QWidget *parent) : QWidget(parent)
 {
@@ -16,6 +16,13 @@ Board::Board(QWidget *parent) : QWidget(parent)
 
     m_canMove = std::vector< std::vector <bool>> (8, std::vector <bool>(9, false));
     resize(500.0/40*d, 450.0/40*d);
+
+    QBoxLayout * layout = new QBoxLayout(QBoxLayout::RightToLeft);
+    QPushButton *back = new QPushButton("Back");
+    layout->setContentsMargins(10*d,200,50,200);
+    layout->addWidget(back);
+    this->setLayout(layout);
+    connect(back, SIGNAL(clicked()), this, SLOT(slotBack()));
 }
 void Board::drawPostion(int x, int y,int r ,QPainter &pen){
     if(x == d){
