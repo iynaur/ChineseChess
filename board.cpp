@@ -9,12 +9,13 @@ Board::Board(QWidget *parent) : QWidget(parent)
 {
     selected = -1 ;
     d = 60 ;
-    setMinimumSize(d*15, d*12);
+    setMinimumSize(d*10, d*11);
     bRedTurn = true ; //red first
     initStone();
     this->setWindowTitle(QString("中国象棋"));
 
     m_canMove = std::vector< std::vector <bool>> (8, std::vector <bool>(9, false));
+    resize(500.0/40*d, 450.0/40*d);
 }
 void Board::drawPostion(int x, int y,int r ,QPainter &pen){
     if(x == d){

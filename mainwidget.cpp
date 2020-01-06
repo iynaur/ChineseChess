@@ -11,6 +11,7 @@ MainWidget::MainWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->widget = new MultiGame(this);
+    resize(ui->widget->width() + 100, ui->widget->height() + 50);
 }
 
 MainWidget::~MainWidget()

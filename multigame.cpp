@@ -6,7 +6,7 @@
 MultiGame::MultiGame(QWidget *parent) : Board(parent){
     QBoxLayout * layout = new QBoxLayout(QBoxLayout::RightToLeft);
     QPushButton *back = new QPushButton("Back");
-    layout->setContentsMargins(600,200,50,200);
+    layout->setContentsMargins(10*d,200,50,200);
     layout->addWidget(back);
     this->setLayout(layout);
     connect(back, SIGNAL(clicked()), this, SLOT(slotBack()));
