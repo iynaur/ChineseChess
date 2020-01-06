@@ -10,8 +10,8 @@ MainWidget::MainWidget(QWidget *parent) :
     ui(new Ui::MainWidget)
 {
     ui->setupUi(this);
-    ui->widget = new MultiGame(this);
-    resize(ui->widget->width() + 100, ui->widget->height() + 50);
+    widget = new MultiGame(this);
+    resize(widget->width() + 100, widget->height() + 50);
 }
 
 MainWidget::~MainWidget()
@@ -21,24 +21,24 @@ MainWidget::~MainWidget()
 
 void MainWidget::on_pushButton_clicked()
 {
-    if(ui->widget != NULL)
-        delete ui->widget;
-    ui->widget = new MultiGame(this);
-    ui->widget->setVisible(true);
+    if(widget != NULL)
+        delete widget;
+    widget = new MultiGame(this);
+    widget->setVisible(true);
 }
 
 void MainWidget::on_pushButton_2_clicked()
 {
-    if(ui->widget != NULL)
-        delete ui->widget;
-    ui->widget = new SingleGame(this);
-    ui->widget->setVisible(true);
+    if(widget != NULL)
+        delete widget;
+    widget = new SingleGame(this);
+    widget->setVisible(true);
 }
 
 void MainWidget::on_pushButton_3_clicked()
 {
   on_pushButton_2_clicked();
-  SingleGame* sin = dynamic_cast<SingleGame*>(ui->widget);
+  SingleGame* sin = dynamic_cast<SingleGame*>(widget);
   sin->bRedTurn = !sin->bRedTurn;
   sin->computerMove();
 }

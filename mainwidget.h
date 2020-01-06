@@ -23,6 +23,7 @@ private slots:
 
 private:
     Ui::MainWidget *ui;
+    QWidget* widget;
 };
 
 #endif // MAINWIDGET_H
