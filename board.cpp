@@ -8,11 +8,13 @@
 Board::Board(QWidget *parent) : QWidget(parent)
 {
     selected = -1 ;
-    d = 40 ;
+    d = 60 ;
     setMinimumSize(d*15, d*12);
     bRedTurn = true ; //red first
     initStone();
     this->setWindowTitle(QString("中国象棋"));
+
+    m_canMove = std::vector< std::vector <bool>> (8, std::vector <bool>(9, false));
 }
 void Board::drawPostion(int x, int y,int r ,QPainter &pen){
     if(x == d){
@@ -44,6 +46,7 @@ void Board::drawPostion(int x, int y,int r ,QPainter &pen){
     }
 }
 void Board::initStone(){
+    //9 * 10
     bRedTurn = true ; //red first
     //0-15 is red
     stone[0] = Stone(d,10*d,0,false,Stone::RED,Stone::REDCHE);
@@ -91,18 +94,20 @@ void Board::drawStone(int id,QPainter &pen){
             pen.setBrush(Qt::gray);
         }else pen.setBrush(QBrush(Qt::yellow));
 
+         QFont serifFont("Times", 20, QFont::Bold);
+         pen.setFont(serifFont);
         if(stone[id].color == Stone::RED){
             pen.setPen(Qt::red);
             pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2,d/2);
             pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-1,d/2-1);
             pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-2,d/2-2);
-            pen.drawText(QRectF(stone[id].getRow()-10,stone[id].getCol()-10,20,20),Qt::AlignCenter,stone[id].getSoneName());
+            pen.drawText(QRectF(stone[id].getRow()-20,stone[id].getCol()-20,40,40),Qt::AlignCenter,stone[id].getSoneName());
         }else{
             pen.setPen(Qt::black);
             pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2,d/2);
             pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-1,d/2-1);
             pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-2,d/2-2);
-            pen.drawText(QRectF(stone[id].getRow()-10,stone[id].getCol()-10,20,20),Qt::AlignCenter,stone[id].getSoneName());
+            pen.drawText(QRectF(stone[id].getRow()-20,stone[id].getCol()-20,40,40),Qt::AlignCenter,stone[id].getSoneName());
         }
     }
 }
@@ -160,6 +165,17 @@ void Board::paintEvent(QPaintEvent *){
     for(int i = 0 ; i < 32 ; i++){
         drawStone(i,pen);
     }
+
+    if (!m_bHasMoved)
+    {
+        QPen line( QBrush(Qt::red), 3);
+        pen.setPen(line);
+        for (int i = 0; i < m_canMove.size(); ++i)
+            for (int j = 0; j < m_canMove[i].size(); ++j)
+            {
+                if (m_canMove[i][j]) drawPostion((i+1)*d,(j +1)*d,r,pen);
+            }
+    }
 }
 
 QPoint& Board::getRowCol(QPoint &pen){
@@ -184,8 +200,48 @@ QPoint& Board::getRowCol(QPoint &pen){
 
 bool Board::isRegularMovement(int selectid, int row, int col, int killid){
     if(stone[selectid].color == stone[killid].color){
-        this->selected = killid ;
-        update();
+
+        return false ;
+    }
+
+    switch(stone[selectid].type){
+    case Stone::JIANG:
+    case Stone::SHUAI:{
+        return isRegularMoveBoss(selectid,row,col);
+    }
+    case Stone::REDCHE:
+    case Stone::BLACKCHE:{
+        return isRegularMoveCHE(selectid,row,col);
+    }
+    case Stone::REDMA:
+    case Stone::BLACKMA:{
+        return isRegularMoveMa(selectid,row,col);
+    }
+    case Stone::REDXIANG:
+    case Stone::BLACKXIANG:{
+        return isRegularMoveXiang(selectid,row,col);
+    }
+    case Stone::REDSHI:
+    case Stone::BLACKSHI:{
+        return isRegularMoveShi(selectid,row,col);
+    }
+    case Stone::BING:
+    case Stone::ZU:{
+        return isRegularMoveSoldier(selectid,row,col);
+    }
+    case Stone::REDPAO:
+    case Stone::BLACKPAO:{
+        return isRegularMovePao(selectid,row,col,killid);
+    }
+    default:
+        return false;
+    }
+    //return true ;
+}
+
+bool Board::isRealRegularMovement(int selectid, int row, int col, int killid)
+{
+    if(stone[selectid].color == stone[killid].color){
         return false ;
     }
 
@@ -496,6 +552,24 @@ void Board::back(Step *step){
     moveStone(step->_moveid, step->_rowFrom, step->_colFrom);
 }
 
+void Board::initCanMove()
+{
+    m_canMove = std::vector< std::vector <bool>> (9, std::vector <bool>(10, false));
+
+    for (int i= 0; i < m_canMove.size(); ++i)
+        for (int j = 0; j < m_canMove[i].size(); ++j)
+        {
+            int row = (i+1)*d;
+            int col = (j+1)*d;
+
+            int id = getStoneId(row, col);
+            m_canMove[i][j] = isRealRegularMovement(selected,row,col,id);
+
+        }
+
+
+}
+
 void Board::backOne(){
     if(!steps.isEmpty()){
         Step* step = this->steps.last();
@@ -537,6 +611,9 @@ void Board::click(int id, int row, int col){
     if(this->selected == -1)
     {
         trySelectStone(id);
+        m_bHasMoved = false;
+        initCanMove();
+        update();
     }
     else
     {
@@ -557,7 +634,13 @@ void Board::tryMoveStone(int killid, int row, int col){
         moveStone(selected, killid, row, col);
         restartGame();
         selected = -1;
+        m_bHasMoved = true;
         update();
+    }
+    else
+    {
+        this->selected = -1;
+        click(killid, row, col);
     }
 }
 void Board::moveStone(int moveid, int killid, int row, int col){

@@ -21,6 +21,7 @@ public:
 
     void drawStone(int id,QPainter &pen);
     bool isRegularMovement(int selectid ,int row,int col,int killid);
+    bool isRealRegularMovement(int selectid ,int row,int col,int killid);
 
     bool isRegularMoveBoss(int selectid ,int row,int col);
     bool isRegularMoveCHE(int selectid ,int row,int col);
@@ -48,6 +49,7 @@ public:
     void reliveStone(int id);
     void backOne();
     void back(Step *step);
+    void initCanMove();
 
 protected:
     Stone stone[32];
@@ -55,6 +57,9 @@ protected:
     int d ;
     bool bRedTurn ;
     QVector<Step *> steps ;
+
+    std::vector<std::vector<bool>> m_canMove;
+    bool m_bHasMoved = false;
 
 private:
     void drawPostion(int x ,int y,int r,QPainter &pen);
