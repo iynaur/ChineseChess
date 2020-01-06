@@ -4,11 +4,10 @@
 
 #include <QObject>
 
-class Step : public QObject
+class Step
 {
-    Q_OBJECT
 public:
-    explicit Step(QObject *parent = 0);
+    explicit Step();
     ~Step();
 
     int _moveid;
@@ -18,9 +17,6 @@ public:
     int _rowTo;
     int _colTo;
 
-signals:
-
-public slots:
 };
 
 #endif // STEP_H
