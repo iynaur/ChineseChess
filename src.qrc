@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>source/chess.png</file>
+        <file>source/favicon.ico</file>
     </qresource>
 </RCC>
