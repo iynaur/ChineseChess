@@ -19,8 +19,7 @@ public:
     Step* getBestMove();
     void getALLPossibleMove(QVector<Step *> & );
     void saveAllPossibleMove(int moveid,int killid,int row ,int col ,QVector<Step *> &);
-    void fakeMove(Step *);
-    void unfakeMove(Step *);
+
     int calScore();
     int getMinScore(int level,int curMaxScore);
     int getMaxScore(int level,int curMinScore);

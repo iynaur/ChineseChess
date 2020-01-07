@@ -100,16 +100,7 @@ void SingleGame::getALLPossibleMove(QVector<Step *> & steps){
     }
 }
 
-void SingleGame::fakeMove(Step *step){
-    // smiliar move step
-    this->killStone(step->_killid);
-    this->moveStone(step->_moveid,step->_rowTo,step->_colTo);
-}
-void SingleGame::unfakeMove(Step *step){
-    //smiliar back step
-    this->reliveStone(step->_killid);
-    this->moveStone(step->_moveid, step->_rowFrom, step->_colFrom);
-}
+
 int SingleGame::calScore(){
     //enum TYPE{JIANG,SHUAI,BING,ZU,REDPAO,BLACKPAO,REDCHE,BLACKCHE,REDMA,BLACKMA,BLACKXIANG,REDXIANG,REDSHI,BLACKSHI};
   int pao = 699;//pao will not eat ma if pao >= ma + zu when level = 4

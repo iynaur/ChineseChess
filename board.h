@@ -21,6 +21,7 @@ public:
 
     void drawStone(int id,QPainter &pen);
     bool isRegularMovement(int selectid ,int row,int col,int killid);
+    bool maybeRegularMovement(int selectid ,int row,int col,int killid);
 
     bool isRegularMoveBoss(int selectid ,int row,int col);
     bool isRegularMoveCHE(int selectid ,int row,int col);
@@ -49,6 +50,9 @@ public:
     void backOne();
     void back(Step *step);
     void initCanMove();
+    void fakeMove(Step *);
+    void unfakeMove(Step *);
+
     bool bRedTurn ;
 
 protected:

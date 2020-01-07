@@ -206,7 +206,7 @@ QPoint& Board::getRowCol(QPoint &pen){
     return pen ;
 }
 
-bool Board::isRegularMovement(int selectid, int row, int col, int killid){
+bool Board::maybeRegularMovement(int selectid, int row, int col, int killid){
     if(stone[selectid].color == stone[killid].color){
 
         return false ;
@@ -245,6 +245,37 @@ bool Board::isRegularMovement(int selectid, int row, int col, int killid){
         return false;
     }
     //return true ;
+}
+
+bool Board::isRegularMovement(int selectid, int row, int col, int killid)
+{
+  if (!maybeRegularMovement(selectid,  row,  col,  killid)) return false;
+  for(int j = 0 ; j < 32 ; j++){
+      if(stone[j].type ==Stone::JIANG){
+        for(int i = 0 ; i < 32 ; i++)
+        {
+          if(stone[i].type == Stone::SHUAI)
+          {
+            if (stone[i].getRow() != stone[j].getRow() &&
+                stone[i].getCol() != stone[j].getCol()) return true;
+
+            Step* step = new Step;
+            step->_colFrom = stone[selectid].getCol();
+            step->_colTo = col;
+            step->_rowFrom = stone[selectid].getRow();
+            step->_rowTo = row;
+            step->_moveid = selectid;
+            step->_killid = killid;
+            fakeMove(step);
+            bool empty = isEXistPieceInLine(j,stone[i].getRow(),stone[i].getCol());
+            unfakeMove(step);
+            if(!empty) return false ;
+            else return true;
+          }
+        }
+
+      }
+  }
 }
 
 bool Board::isRegularMoveBoss(int selectid ,int row,int col){
@@ -638,4 +669,15 @@ void Board::moveStone(int moveid, int row, int col){
     stone[moveid].setCol(col);
 
     bRedTurn = !bRedTurn;
+}
+
+void Board::fakeMove(Step *step){
+    // smiliar move step
+    this->killStone(step->_killid);
+    this->moveStone(step->_moveid,step->_rowTo,step->_colTo);
+}
+void Board::unfakeMove(Step *step){
+    //smiliar back step
+    this->reliveStone(step->_killid);
+    this->moveStone(step->_moveid, step->_rowFrom, step->_colFrom);
 }
