@@ -276,6 +276,10 @@ bool Board::isRegularMovement(int selectid, int row, int col, int killid)
 
       }
   }
+  {
+    throw("ERROR in isRegularMovement, no return value");
+    return false;//make compiler happy
+  }
 }
 
 bool Board::isRegularMoveBoss(int selectid ,int row,int col){
