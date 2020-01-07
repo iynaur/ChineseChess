@@ -247,47 +247,6 @@ bool Board::isRegularMovement(int selectid, int row, int col, int killid){
     //return true ;
 }
 
-bool Board::isRealRegularMovement(int selectid, int row, int col, int killid)
-{
-    if(stone[selectid].color == stone[killid].color){
-        return false ;
-    }
-
-    switch(stone[selectid].type){
-    case Stone::JIANG:
-    case Stone::SHUAI:{
-        return isRegularMoveBoss(selectid,row,col);
-    }
-    case Stone::REDCHE:
-    case Stone::BLACKCHE:{
-        return isRegularMoveCHE(selectid,row,col);
-    }
-    case Stone::REDMA:
-    case Stone::BLACKMA:{
-        return isRegularMoveMa(selectid,row,col);
-    }
-    case Stone::REDXIANG:
-    case Stone::BLACKXIANG:{
-        return isRegularMoveXiang(selectid,row,col);
-    }
-    case Stone::REDSHI:
-    case Stone::BLACKSHI:{
-        return isRegularMoveShi(selectid,row,col);
-    }
-    case Stone::BING:
-    case Stone::ZU:{
-        return isRegularMoveSoldier(selectid,row,col);
-    }
-    case Stone::REDPAO:
-    case Stone::BLACKPAO:{
-        return isRegularMovePao(selectid,row,col,killid);
-    }
-    default:
-        return false;
-    }
-    //return true ;
-}
-
 bool Board::isRegularMoveBoss(int selectid ,int row,int col){
     if(stone[selectid].color == Stone::BLACK){
         if(col < d || col > 3*d ){
@@ -571,7 +530,7 @@ void Board::initCanMove()
             int col = (j+1)*d;
 
             int id = getStoneId(row, col);
-            m_canMove[i][j] = isRealRegularMovement(selected,row,col,id);
+            m_canMove[i][j] = isRegularMovement(selected,row,col,id);
 
         }
 

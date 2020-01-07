@@ -21,7 +21,6 @@ public:
 
     void drawStone(int id,QPainter &pen);
     bool isRegularMovement(int selectid ,int row,int col,int killid);
-    bool isRealRegularMovement(int selectid ,int row,int col,int killid);
 
     bool isRegularMoveBoss(int selectid ,int row,int col);
     bool isRegularMoveCHE(int selectid ,int row,int col);
