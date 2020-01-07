@@ -1,2 +1,12 @@
 *.user
 
+.vs/*
+debug/*
+x64/*
+ChineseChess.sln
+ChineseChess.vcxproj
+ChineseChess.vcxproj.filters
+ui_mainwidget.h
+CHINACHESSS_resource.rc
+.qmake.stash
+release/*
