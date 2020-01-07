@@ -250,6 +250,7 @@ bool Board::maybeRegularMovement(int selectid, int row, int col, int killid){
 bool Board::isRegularMovement(int selectid, int row, int col, int killid)
 {
   if (!maybeRegularMovement(selectid,  row,  col,  killid)) return false;
+  if (stone[selectid].type == Stone::JIANG || stone[selectid].type == Stone::SHUAI) return true;
   for(int j = 0 ; j < 32 ; j++){
       if(stone[j].type ==Stone::JIANG){
         for(int i = 0 ; i < 32 ; i++)
