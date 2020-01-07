@@ -479,6 +479,7 @@ bool Board::isEXistPieceInLine(int selectid, int row, int col){
         }
         return false ;
     }
+    throw("wrong param in isEXistPieceInLine.");
     return false ;
 }
 int Board::countPieceInLine(int selectid, int row, int col){
