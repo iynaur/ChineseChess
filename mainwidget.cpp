@@ -49,7 +49,15 @@ void MainWidget::on_pushButton_4_clicked()
   if(widget != NULL)
       delete widget;
   ZeroGame* zero = new ZeroGame(this);
-  zero->start();
+//  zero->start();
   widget = zero;
   widget->setVisible(true);
+}
+
+void MainWidget::on_pushButton_5_clicked()
+{
+
+  ZeroGame* zero = dynamic_cast<ZeroGame*>(widget);
+//  zero->computerMoveStart();
+  zero->computerOneMove();
 }

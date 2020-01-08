@@ -10,6 +10,7 @@ public:
   void start();
   void computerMoveStart();
   void computerRedMove();
+  void computerOneMove();
 };
 
 #endif // ZEROGAME_H

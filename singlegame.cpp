@@ -82,6 +82,8 @@ void SingleGame::saveAllPossibleMove(int moveid, int killid, int row, int col, Q
     steps.push_back(step);
 }
 void SingleGame::getALLPossibleMove(QVector<Step *> & steps){
+    if ((whoWinTheGame() == Stone::RED && !this->bRedTurn) ||
+            (whoWinTheGame() == Stone::BLACK && this->bRedTurn)) return;
 
     //id [16,31] is black
     int min = 16 ;
@@ -109,7 +111,7 @@ int SingleGame::calScore(){
     //enum TYPE{JIANG,SHUAI,BING,ZU,REDPAO,BLACKPAO,REDCHE,BLACKCHE,REDMA,BLACKMA,BLACKXIANG,REDXIANG,REDSHI,BLACKSHI};
   int pao = 699;//pao will not eat ma if pao >= ma + zu when level = 4
   int ma = 499;
-    static int chessScore[] = {15000,15000,200,200,pao,pao,1000,1000,499,499,100,100,100,100};
+    static int chessScore[] = {150000,150000,200,200,pao,pao,1000,1000,499,499,100,100,100,100};
     int redScore = 0 ;
     int blackScore = 0 ;
 
@@ -231,6 +233,7 @@ Step* SingleGame::getBestMove(){
         }
     }
     //get best move step
+    std::cerr<<"Blk can get max of "<<maxScore<<std::endl;
     return realstp ;
 }
 
@@ -240,7 +243,7 @@ Step *SingleGame::getBestRedMove()
   QVector<Step*>steps ;
   //1.get all possible move steps
   this->getALLPossibleMove(steps);
-  if (rand()%2){
+  if (1){
     std::vector<Step*> stlsteps;
     for (auto step : steps) stlsteps.push_back(step);
 
@@ -271,6 +274,7 @@ Step *SingleGame::getBestRedMove()
       }
   }
   //get best move step
+  std::cerr<<"Red can get min of "<<minScore<<std::endl;
   return realstp ;
 }
 

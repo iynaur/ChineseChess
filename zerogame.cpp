@@ -1,5 +1,6 @@
 #include "zerogame.h"
 #include <QTimer>
+#include <iostream>
 
 ZeroGame::ZeroGame(QWidget *parent) : SingleGame(parent)
 {
@@ -13,16 +14,24 @@ void ZeroGame::start()
 
 void ZeroGame::computerMoveStart()
 {
+  computerOneMove();
+  QTimer::singleShot(2, this, &ZeroGame::computerMoveStart);
+}
+
+void ZeroGame::computerOneMove()
+{
   int msec = 1;
   if (bool normal = true){
-    QTimer::singleShot(msec, this, &ZeroGame::computerRedMove);
-    QTimer::singleShot(2*msec, this, &ZeroGame::computerMove);
+//    QTimer::singleShot(msec, this, &ZeroGame::computerRedMove);
+//    QTimer::singleShot(2*msec, this, &ZeroGame::computerMove);
+      if (bRedTurn)computerRedMove();
+      else computerMove();
+      std::cerr<<"cur score is "<<calScore()<<std::endl;
   }
   else {
     QTimer::singleShot(msec, this, &ZeroGame::computerMove);
     QTimer::singleShot(2*msec, this, &ZeroGame::computerRedMove);
   }
-  QTimer::singleShot(2*msec, this, &ZeroGame::computerMoveStart);
 }
 
 void ZeroGame::computerRedMove(){
