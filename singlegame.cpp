@@ -154,7 +154,7 @@ int SingleGame::getMinScore(int level , int curMaxScore){
                  steps.removeLast();
                  delete step ;
              }
-            return score;
+            return std::max(score, INT_MIN+1) -1;
         }
         if(score < minScore){
             minScore = score ;
@@ -193,16 +193,16 @@ int SingleGame::getMaxScore(int level,int curMinScore){
         unfakeMove(step);
         delete step ;
 
-        if(score >= curMinScore){//can not both contain ==
+        if(score >= curMinScore){//can not both contain ==?
             while (steps.count()) {
                 Step * step = steps.back() ;
                 steps.removeLast();
                 delete step ;
             }
             if (level == 3)
-                return score;
+                return std::min(score, INT_MAX-1)+1;
             else
-                return score;
+                return std::min(score, INT_MAX-1)+1;;
             return score;
         }
         if(score > maxScore){
