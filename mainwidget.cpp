@@ -13,6 +13,7 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->setupUi(this);
     widget = new MultiGame(this);
     resize(widget->width() + 100, widget->height() + 50);
+    on_pushButton_4_clicked();
 }
 
 MainWidget::~MainWidget()

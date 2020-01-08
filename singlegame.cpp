@@ -173,6 +173,16 @@ int SingleGame::getMaxScore(int level,int curMinScore){
     //1.get all possible move steps
     this->getALLPossibleMove(steps);
     int maxScore = std::numeric_limits<int>::min();
+
+//    if (level == 1)
+//    {
+//        std::cerr<<"black should live!\n";
+//    }
+//    else if (level == 3)
+//    {
+//        std::cerr<<"black should move jiang!\n";
+//        std::cerr<<"and black sh live!\n";
+//    }
     while (steps.count()) {
         Step * step = steps.back() ;
         steps.removeLast();
@@ -183,12 +193,16 @@ int SingleGame::getMaxScore(int level,int curMinScore){
         unfakeMove(step);
         delete step ;
 
-        if(score >= curMinScore){
+        if(score >= curMinScore){//can not both contain ==
             while (steps.count()) {
                 Step * step = steps.back() ;
                 steps.removeLast();
                 delete step ;
             }
+            if (level == 3)
+                return score;
+            else
+                return score;
             return score;
         }
         if(score > maxScore){
@@ -196,7 +210,10 @@ int SingleGame::getMaxScore(int level,int curMinScore){
         }
 
     }
-    return maxScore;
+    if (level == 3)
+        return maxScore;
+    else
+        return maxScore;
 }
 
 Step* SingleGame::getBestMove(){
