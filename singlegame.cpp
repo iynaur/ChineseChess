@@ -198,6 +198,7 @@ int SingleGame::getMaxScore(int level,int curMinScore){
 }
 
 Step* SingleGame::getBestMove(){
+    if (bRedTurn) throw(-1);
     //computer move
     QVector<Step*>steps ;
     //1.get all possible move steps
@@ -224,7 +225,7 @@ Step* SingleGame::getBestMove(){
         int score = this->getMinScore(level-1,maxScore);
         unfakeMove(step);
 
-        if(score > maxScore){
+        if(!(score < maxScore)){
             maxScore = score ;
             if(realstp != NULL) delete realstp;
             realstp = step ;
@@ -239,6 +240,8 @@ Step* SingleGame::getBestMove(){
 
 Step *SingleGame::getBestRedMove()
 {
+    if (!bRedTurn) throw(-1);
+
   //computer move
   QVector<Step*>steps ;
   //1.get all possible move steps
@@ -265,7 +268,7 @@ Step *SingleGame::getBestRedMove()
       int score = this->getMaxScore(level-1,minScore);
       unfakeMove(step);
 
-      if(score < minScore){
+      if(!(score > minScore)){//why this is wrong
           minScore = score ;
           if(realstp != NULL) delete realstp;
           realstp = step ;
