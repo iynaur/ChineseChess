@@ -250,15 +250,15 @@ bool Board::maybeRegularMovement(int selectid, int row, int col, int killid){
 bool Board::isRegularMovement(int selectid, int row, int col, int killid)
 {
   if (!maybeRegularMovement(selectid,  row,  col,  killid)) return false;
-  if (stone[selectid].type == Stone::JIANG || stone[selectid].type == Stone::SHUAI) return true;
+
+  if (killid != -1)if (stone[killid].type == Stone::JIANG || stone[killid].type == Stone::SHUAI) return true;
   for(int j = 0 ; j < 32 ; j++){
       if(stone[j].type ==Stone::JIANG){
         for(int i = 0 ; i < 32 ; i++)
         {
           if(stone[i].type == Stone::SHUAI)
           {
-            if (stone[i].getRow() != stone[j].getRow() &&
-                stone[i].getCol() != stone[j].getCol()) return true;
+
 
             Step* step = new Step;
             step->_colFrom = stone[selectid].getCol();
@@ -268,10 +268,13 @@ bool Board::isRegularMovement(int selectid, int row, int col, int killid)
             step->_moveid = selectid;
             step->_killid = killid;
             fakeMove(step);
-            bool empty = isEXistPieceInLine(j,stone[i].getRow(),stone[i].getCol());
+            //check same line
+            bool front = true;
+            if (stone[i].getRow() != stone[j].getRow() &&
+                stone[i].getCol() != stone[j].getCol()) front = false;
+            else front = !isEXistPieceInLine(j,stone[i].getRow(),stone[i].getCol());
             unfakeMove(step);
-            if(!empty) return false ;
-            else return true;
+            return !front;
           }
         }
 
@@ -302,16 +305,6 @@ bool Board::isRegularMoveBoss(int selectid ,int row,int col){
         return false ;
     }
 
-    //
-    if(drow == d){
-        for(int j = 0 ; j < 32 ; j++){
-            if(stone[j].getRow() == row && (stone[j].type ==Stone::JIANG || stone[j].type == Stone::SHUAI)){
-                if(!isEXistPieceInLine(j,row,col)){
-                    return false ;
-                }
-            }
-        }
-    }
     return true ;
 }
 
