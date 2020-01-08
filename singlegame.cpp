@@ -236,6 +236,8 @@ Step *SingleGame::getBestRedMove()
 {
   //computer move
   QVector<Step*>steps ;
+  //1.get all possible move steps
+  this->getALLPossibleMove(steps);
   {
     std::vector<Step*> stlsteps;
     for (auto step : steps) stlsteps.push_back(step);
@@ -246,8 +248,6 @@ Step *SingleGame::getBestRedMove()
     for (auto step : stlsteps) steps.push_back(step);
 
   }
-  //1.get all possible move steps
-  this->getALLPossibleMove(steps);
 
   //2.try to move
   int minScore = std::numeric_limits<int>::max();
