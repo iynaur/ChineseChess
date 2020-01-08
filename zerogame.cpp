@@ -14,8 +14,14 @@ void ZeroGame::start()
 void ZeroGame::computerMoveStart()
 {
   int msec = 1;
-  QTimer::singleShot(msec, this, &ZeroGame::computerRedMove);
-  QTimer::singleShot(2*msec, this, &ZeroGame::computerMove);
+  if (bool normal = true){
+    QTimer::singleShot(msec, this, &ZeroGame::computerRedMove);
+    QTimer::singleShot(2*msec, this, &ZeroGame::computerMove);
+  }
+  else {
+    QTimer::singleShot(msec, this, &ZeroGame::computerMove);
+    QTimer::singleShot(2*msec, this, &ZeroGame::computerRedMove);
+  }
   QTimer::singleShot(2*msec, this, &ZeroGame::computerMoveStart);
 }
 
