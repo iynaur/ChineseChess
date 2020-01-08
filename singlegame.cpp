@@ -130,6 +130,7 @@ int SingleGame::calScore(){
 }
 int SingleGame::getMinScore(int level , int curMaxScore){
 
+    if(!bRedTurn) throw(-1);
     if(level == 0) return this->calScore();
 
     QVector<Step*>steps ;
@@ -165,6 +166,7 @@ int SingleGame::getMinScore(int level , int curMaxScore){
 
 int SingleGame::getMaxScore(int level,int curMinScore){
 
+    if(bRedTurn) throw(-1);
     if(level == 0) return this->calScore();
 
     QVector<Step*>steps ;
@@ -265,10 +267,11 @@ Step *SingleGame::getBestRedMove()
       steps.removeLast();
 
       fakeMove(step);
-      int score = this->getMaxScore(level-1,minScore);
+      int score = this->getMaxScore(level-1,minScore);//because here will
+      //return minScore
       unfakeMove(step);
 
-      if(!(score > minScore)){//why this is wrong
+      if(score <= minScore){//why this is wrong
           minScore = score ;
           if(realstp != NULL) delete realstp;
           realstp = step ;

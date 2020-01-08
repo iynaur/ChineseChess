@@ -52,6 +52,7 @@ void MainWidget::on_pushButton_4_clicked()
 //  zero->start();
   widget = zero;
   widget->setVisible(true);
+  for (int i=0; i< 18; ++i) on_pushButton_5_clicked();//forward to error
 }
 
 void MainWidget::on_pushButton_5_clicked()
