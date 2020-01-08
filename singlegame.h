@@ -17,6 +17,7 @@ public:
     void paintEvent(QPaintEvent *) override;
 
     Step* getBestMove();
+    Step* getBestRedMove();
     void getALLPossibleMove(QVector<Step *> & );
     void saveAllPossibleMove(int moveid,int killid,int row ,int col ,QVector<Step *> &);
 
@@ -24,7 +25,7 @@ public:
     int getMinScore(int level,int curMaxScore);
     int getMaxScore(int level,int curMinScore);
 
-private:
+protected:
     int level ;
     Step* m_lastMove = nullptr;
 

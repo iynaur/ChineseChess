@@ -4,6 +4,7 @@
 #include <QImage>
 #include <QPixmap>
 #include "singlegame.h"
+#include "zerogame.h"
 #include <iostream>
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
@@ -41,4 +42,14 @@ void MainWidget::on_pushButton_3_clicked()
   SingleGame* sin = dynamic_cast<SingleGame*>(widget);
   sin->bRedTurn = !sin->bRedTurn;
   sin->computerMove();
+}
+
+void MainWidget::on_pushButton_4_clicked()
+{
+  if(widget != NULL)
+      delete widget;
+  ZeroGame* zero = new ZeroGame(this);
+  zero->start();
+  widget = zero;
+  widget->setVisible(true);
 }

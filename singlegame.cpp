@@ -220,6 +220,36 @@ Step* SingleGame::getBestMove(){
     return realstp ;
 }
 
+Step *SingleGame::getBestRedMove()
+{
+  //computer move
+  QVector<Step*>steps ;
+  //1.get all possible move steps
+  this->getALLPossibleMove(steps);
+
+  //2.try to move
+  int minScore = std::numeric_limits<int>::max();
+  Step * realstp = NULL;
+  while (steps.count()) {
+      Step * step = steps.back() ;
+      steps.removeLast();
+
+      fakeMove(step);
+      int score = this->getMaxScore(level-1,minScore);
+      unfakeMove(step);
+
+      if(score < minScore){
+          minScore = score ;
+          if(realstp != NULL) delete realstp;
+          realstp = step ;
+      }else{
+          delete step ;
+      }
+  }
+  //get best move step
+  return realstp ;
+}
+
 void SingleGame::back(){
     backOne();
     backOne();

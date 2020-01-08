@@ -37,7 +37,8 @@ SOURCES += \
     stone.cpp \
     step.cpp \
     multigame.cpp \
-    singlegame.cpp
+    singlegame.cpp \
+  zerogame.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -45,7 +46,8 @@ HEADERS += \
     stone.h \
     step.h \
     multigame.h \
-    singlegame.h
+    singlegame.h \
+  zerogame.h
 
 FORMS += \
         mainwidget.ui
