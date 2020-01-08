@@ -57,12 +57,14 @@ void SingleGame::paintEvent(QPaintEvent *e)
 
 }
 void SingleGame::computerMove(){
+  if (whoWinTheGame()) return;
   if (m_lastMove)
   {
     delete m_lastMove;
     m_lastMove = nullptr;
   }
     m_lastMove = this->getBestMove();
+    if (!m_lastMove) return;
     this->moveStone(m_lastMove->_moveid, m_lastMove->_killid, m_lastMove->_rowTo, m_lastMove->_colTo);
     this->restartGame();
     selected = -1;
@@ -238,7 +240,7 @@ Step *SingleGame::getBestRedMove()
   QVector<Step*>steps ;
   //1.get all possible move steps
   this->getALLPossibleMove(steps);
-  {
+  if (rand()%2){
     std::vector<Step*> stlsteps;
     for (auto step : steps) stlsteps.push_back(step);
 
