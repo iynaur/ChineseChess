@@ -5,6 +5,8 @@
 #include <QTimer>
 #include <iostream>
 #include <QPainter>
+#include <algorithm>
+#include <random>
 
 SingleGame::SingleGame(QWidget *parent) : Board(parent){
     this->level = 4 ;
@@ -196,6 +198,16 @@ Step* SingleGame::getBestMove(){
     QVector<Step*>steps ;
     //1.get all possible move steps
     this->getALLPossibleMove(steps);
+    {
+      std::vector<Step*> stlsteps;
+      for (auto step : steps) stlsteps.push_back(step);
+
+      auto rng = std::default_random_engine {};
+      std::shuffle(std::begin(stlsteps), std::end(stlsteps), rng);
+      steps.clear();
+      for (auto step : stlsteps) steps.push_back(step);
+
+    }
 
     //2.try to move
     int maxScore = std::numeric_limits<int>::min();
@@ -224,6 +236,16 @@ Step *SingleGame::getBestRedMove()
 {
   //computer move
   QVector<Step*>steps ;
+  {
+    std::vector<Step*> stlsteps;
+    for (auto step : steps) stlsteps.push_back(step);
+
+    auto rng = std::default_random_engine {};
+    std::shuffle(std::begin(stlsteps), std::end(stlsteps), rng);
+    steps.clear();
+    for (auto step : stlsteps) steps.push_back(step);
+
+  }
   //1.get all possible move steps
   this->getALLPossibleMove(steps);
 
