@@ -4,6 +4,7 @@
 #include<iostream>
 #include<QVector>
 #include<QtWidgets>
+using namespace std;
 
 Board::Board(QWidget *parent) : QWidget(parent)
 {
@@ -207,7 +208,7 @@ QPoint& Board::getRowCol(QPoint &pen){
 }
 
 bool Board::maybeRegularMovement(int selectid, int row, int col, int killid){
-    if(stone[selectid].color == stone[killid].color){
+    if(killid != -1 && stone[selectid].color == stone[killid].color){
 
         return false ;
     }
