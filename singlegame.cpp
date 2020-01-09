@@ -7,6 +7,7 @@
 #include <QPainter>
 #include <algorithm>
 #include <random>
+#include <chrono>       // std::chrono::system_clock
 
 SingleGame::SingleGame(QWidget *parent) : Board(parent){
     this->level = 4 ;
@@ -103,7 +104,7 @@ void SingleGame::getALLPossibleMove(QVector<std::shared_ptr<Step>> & steps){
 }
 
 
-int SingleGame::calScore(){
+std::pair<int, int> SingleGame::calScore(){
     //enum TYPE{JIANG,SHUAI,BING,ZU,REDPAO,BLACKPAO,REDCHE,BLACKCHE,REDMA,BLACKMA,BLACKXIANG,REDXIANG,REDSHI,BLACKSHI};
   int pao = 699;//pao will not eat ma if pao >= ma + zu when level = 4
   int ma = 499;
@@ -122,9 +123,9 @@ int SingleGame::calScore(){
             blackScore += chessScore[this->stone[i].type];
         }
     }
-    return (blackScore - redScore) ;
+    return {(blackScore - redScore), 0};
 }
-int SingleGame::getMinScore(int level , int curMaxScore){
+std::pair<int, int> SingleGame::getMinScore(int level , int curMaxScore){
 
     if(!bRedTurn) throw(-1);
     if(level == 0) return this->calScore();
@@ -132,7 +133,7 @@ int SingleGame::getMinScore(int level , int curMaxScore){
     QVector<std::shared_ptr<Step>>steps ;
     //1.get all possible move steps
     this->getALLPossibleMove(steps);
-    int minScore = std::numeric_limits<int>::max();
+    std::pair<int, int> minScore = {std::numeric_limits<int>::max(), level};
     while (steps.count()) {
         std::shared_ptr<Step> step = steps.back() ;
         steps.removeLast();
@@ -140,17 +141,17 @@ int SingleGame::getMinScore(int level , int curMaxScore){
         fakeMove(step);
 
         //3.assess each step
-        int score = getMaxScore(level-1,minScore);
+        std::pair<int, int> score = getMaxScore(level-1,minScore.first);
         unfakeMove(step);
 
-        if(score <= curMaxScore){
+        if(score.first <= curMaxScore){
              while (steps.count()) {
                  std::shared_ptr<Step> step = steps.back() ;
                  steps.removeLast();
              }
-            return std::max(score, INT_MIN+1) -1;
+             return {std::max(score.first, INT_MIN+1) -1, level};
         }
-        if(score < minScore){
+        if(score.first < minScore.first){
             minScore = score ;
         }
 
@@ -158,7 +159,7 @@ int SingleGame::getMinScore(int level , int curMaxScore){
     return minScore;
 }
 
-int SingleGame::getMaxScore(int level,int curMinScore){
+std::pair<int, int> SingleGame::getMaxScore(int level,int curMinScore){
 
     if(bRedTurn) throw(-1);
     if(level == 0) return this->calScore();
@@ -166,7 +167,7 @@ int SingleGame::getMaxScore(int level,int curMinScore){
     QVector<std::shared_ptr<Step>>steps ;
     //1.get all possible move steps
     this->getALLPossibleMove(steps);
-    int maxScore = std::numeric_limits<int>::min();
+    std::pair<int, int> maxScore = {std::numeric_limits<int>::min(),level};
 
 //    if (level == 1)
 //    {
@@ -183,21 +184,21 @@ int SingleGame::getMaxScore(int level,int curMinScore){
 
         fakeMove(step);
         //3.assess each step
-        int score = getMinScore(level-1,maxScore);
+        std::pair<int, int> score = getMinScore(level-1,maxScore.first);
         unfakeMove(step);
 
-        if(score >= curMinScore){//can not both contain ==?
+        if(score.first >= curMinScore){//can not both contain ==?
             while (steps.count()) {
                 std::shared_ptr<Step> step = steps.back() ;
                 steps.removeLast();
             }
             if (level == 3)
-                return std::min(score, INT_MAX-1)+1;
+              return {std::min(score.first, INT_MAX-1)+1, level};
             else
-                return std::min(score, INT_MAX-1)+1;;
+                return {std::min(score.first, INT_MAX-1)+1, level};
             return score;
         }
-        if(score > maxScore){
+        if(score.first > maxScore.first){
             maxScore = score ;
         }
 
@@ -226,23 +227,24 @@ std::shared_ptr<Step> SingleGame::getBestMove(){
     }
 
     //2.try to move
-    int maxScore = std::numeric_limits<int>::min();
+    std::pair<int, int> maxScore = {std::numeric_limits<int>::min(), level};
     std::shared_ptr<Step> realstp = NULL;
     while (steps.count()) {
         std::shared_ptr<Step> step = steps.back() ;
         steps.removeLast();
 
         fakeMove(step);
-        int score = this->getMinScore(level-1,maxScore);
+        auto score = this->getMinScore(level-1,maxScore.first);
         unfakeMove(step);
 
-        if(!(score < maxScore)){
+        if(score.first > maxScore.first ||
+           (score.first == maxScore.first && score.second > maxScore.second)){
             maxScore = score ;
             realstp = step ;
         }
     }
     //get best move step
-    std::cerr<<"Blk can get max of "<<maxScore<<std::endl;
+    std::cerr<<"Blk can get max of "<<maxScore.first<<std::endl;
     return realstp ;
 }
 
@@ -258,7 +260,8 @@ std::shared_ptr<Step>SingleGame::getBestRedMove()
     std::vector<std::shared_ptr<Step>> stlsteps;
     for (auto step : steps) stlsteps.push_back(step);
 
-    auto rng = std::default_random_engine {};
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    auto rng = std::default_random_engine {seed};
     std::shuffle(std::begin(stlsteps), std::end(stlsteps), rng);
     steps.clear();
     for (auto step : stlsteps) steps.push_back(step);
@@ -266,24 +269,25 @@ std::shared_ptr<Step>SingleGame::getBestRedMove()
   }
 
   //2.try to move
-  int minScore = std::numeric_limits<int>::max();
+  std::pair<int, int> minScore = {std::numeric_limits<int>::max(), level};
   std::shared_ptr<Step> realstp = NULL;
   while (steps.count()) {
       std::shared_ptr<Step> step = steps.back() ;
       steps.removeLast();
 
       fakeMove(step);
-      int score = this->getMaxScore(level-1,minScore);//because here will
+      auto score = this->getMaxScore(level-1,minScore.first);//because here will
       //return minScore
       unfakeMove(step);
 
-      if(score <= minScore){//why this is wrong
+      if(score.first < minScore.first ||
+         (score.first == minScore.first && score.second > minScore.second)){
           minScore = score ;
           realstp = step ;
       }
   }
   //get best move step
-  std::cerr<<"Red can get min of "<<minScore<<std::endl;
+  std::cerr<<"Red can get min of "<<minScore.first<<std::endl;
   return realstp ;
 }
 

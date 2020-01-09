@@ -26,7 +26,7 @@ void ZeroGame::computerOneMove()
 //    QTimer::singleShot(2*msec, this, &ZeroGame::computerMove);
       if (bRedTurn)computerRedMove();
       else computerMove();
-      std::cerr<<"cur score is "<<calScore()<<std::endl;
+      std::cerr<<"cur score is "<<calScore().first<<std::endl;
   }
   else {
     QTimer::singleShot(msec, this, &ZeroGame::computerMove);

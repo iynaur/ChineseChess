@@ -21,9 +21,9 @@ public:
     void getALLPossibleMove(QVector<std::shared_ptr<Step>> & );
     void saveAllPossibleMove(int moveid,int killid,int row ,int col ,QVector<std::shared_ptr<Step>> &);
 
-    int calScore();
-    int getMinScore(int level,int curMaxScore);
-    int getMaxScore(int level,int curMinScore);
+    std::pair<int, int> calScore();
+    std::pair<int, int> getMinScore(int level,int curMaxScore);
+    std::pair<int, int> getMaxScore(int level,int curMinScore);
 
 protected:
     int level ;
