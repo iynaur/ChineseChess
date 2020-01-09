@@ -24,15 +24,18 @@ public:
     std::pair<int, int> calScore();
     std::pair<int, int> getMinScore(int level,int curMaxScore);
     std::pair<int, int> getMaxScore(int level,int curMinScore);
+    bool isDumplicateStep(std::shared_ptr<Step> step);
 
 protected:
     int level ;
     std::shared_ptr<Step> m_lastMove = nullptr;
+    std::vector<std::shared_ptr<Step>> lastRedMove, lastBlackMove;
+
 
 signals:
 
 public slots:
-    void computerMove();
+    void computerBlackMove();
 };
 
 #endif // SINGLEGAME_H

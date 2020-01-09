@@ -23,7 +23,7 @@ void SingleGame::click(int id, int row, int col){
     Board::click(id,row,col);
 
     if(!this->bRedTurn)
-      QTimer::singleShot(100, this, SLOT(computerMove()));
+      QTimer::singleShot(100, this, SLOT(computerBlackMove()));
 }
 
 void SingleGame::paintEvent(QPaintEvent *e)
@@ -57,11 +57,12 @@ void SingleGame::paintEvent(QPaintEvent *e)
     }
 
 }
-void SingleGame::computerMove(){
+void SingleGame::computerBlackMove(){
   if (whoWinTheGame()) return;
 
     m_lastMove = this->getBestMove();
     if (!m_lastMove) return;
+    lastBlackMove.push_back(m_lastMove);
     this->moveStone(m_lastMove->_moveid, m_lastMove->_killid, m_lastMove->_rowTo, m_lastMove->_colTo);
     this->restartGame();
     selected = -1;
@@ -206,7 +207,21 @@ std::pair<int, int> SingleGame::getMaxScore(int level,int curMinScore){
     if (level == 3)
         return maxScore;
     else
-        return maxScore;
+      return maxScore;
+}
+
+bool SingleGame::isDumplicateStep(std::shared_ptr<Step> step)
+{
+  if (bRedTurn)
+  {
+    if (lastRedMove.size() >= 2 && *step == *lastRedMove[lastRedMove.size() - 2]) return true;
+    else return false;
+  }
+  else
+  {
+    if (lastBlackMove.size() >= 2 && *step == *lastBlackMove[lastBlackMove.size() - 2]) return true;
+    else return false;
+  }
 }
 
 std::shared_ptr<Step> SingleGame::getBestMove(){
@@ -228,12 +243,13 @@ std::shared_ptr<Step> SingleGame::getBestMove(){
     }
 
     //2.try to move
-    std::pair<int, int> maxScore = {std::numeric_limits<int>::min(), level};
+    std::pair<int, int> maxScore = {std::numeric_limits<int>::min(), -2};
     std::shared_ptr<Step> realstp = NULL;
     while (steps.count()) {
         std::shared_ptr<Step> step = steps.back() ;
         steps.removeLast();
 
+        if (isDumplicateStep(step)) continue;
         fakeMove(step);
         auto score = this->getMinScore(level-1,maxScore.first);
         unfakeMove(step);
@@ -270,11 +286,13 @@ std::shared_ptr<Step>SingleGame::getBestRedMove()
   }
 
   //2.try to move
-  std::pair<int, int> minScore = {std::numeric_limits<int>::max(), level};
+  std::pair<int, int> minScore = {std::numeric_limits<int>::max(), -2};
   std::shared_ptr<Step> realstp = NULL;
   while (steps.count()) {
       std::shared_ptr<Step> step = steps.back() ;
       steps.removeLast();
+
+      if (isDumplicateStep(step)) continue;
 
       fakeMove(step);
       auto score = this->getMaxScore(level-1,minScore.first);//because here will

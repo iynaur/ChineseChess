@@ -25,11 +25,11 @@ void ZeroGame::computerOneMove()
 //    QTimer::singleShot(msec, this, &ZeroGame::computerRedMove);
 //    QTimer::singleShot(2*msec, this, &ZeroGame::computerMove);
       if (bRedTurn)computerRedMove();
-      else computerMove();
+      else computerBlackMove();
       std::cerr<<"cur score is "<<calScore().first<<std::endl;
   }
   else {
-    QTimer::singleShot(msec, this, &ZeroGame::computerMove);
+    QTimer::singleShot(msec, this, &ZeroGame::computerBlackMove);
     QTimer::singleShot(2*msec, this, &ZeroGame::computerRedMove);
   }
 }
@@ -39,7 +39,7 @@ void ZeroGame::computerRedMove(){
 
     m_lastMove = this->getBestRedMove();
     if (!m_lastMove) return;
-    lastRedMove = m_lastMove;
+    lastRedMove.push_back(m_lastMove);
     this->moveStone(m_lastMove->_moveid, m_lastMove->_killid, m_lastMove->_rowTo, m_lastMove->_colTo);
     this->restartGame();
     selected = -1;

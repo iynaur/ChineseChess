@@ -42,7 +42,7 @@ void MainWidget::on_pushButton_3_clicked()
   on_pushButton_2_clicked();
   SingleGame* sin = dynamic_cast<SingleGame*>(widget);
   sin->bRedTurn = !sin->bRedTurn;
-  sin->computerMove();
+  sin->computerBlackMove();
 }
 
 void MainWidget::on_pushButton_4_clicked()
@@ -53,13 +53,13 @@ void MainWidget::on_pushButton_4_clicked()
 //  zero->start();
   widget = zero;
   widget->setVisible(true);
-  for (int i=0; i< 18; ++i) on_pushButton_5_clicked();//forward to error
+//  for (int i=0; i< 18; ++i) on_pushButton_5_clicked();//forward to error
 }
 
 void MainWidget::on_pushButton_5_clicked()
 {
 
   ZeroGame* zero = dynamic_cast<ZeroGame*>(widget);
-//  zero->computerMoveStart();
-  zero->computerOneMove();
+  zero->computerMoveStart();
+//  zero->computerOneMove();
 }

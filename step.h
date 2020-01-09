@@ -17,6 +17,8 @@ public:
     int _rowTo;
     int _colTo;
 
+    bool operator==(Step const&) const;
+
 };
 
 #endif // STEP_H

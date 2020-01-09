@@ -12,7 +12,6 @@ public:
   void computerRedMove();
   void computerOneMove();
 
-  std::shared_ptr<Step>lastRedMove, *lastBlackMove;
 };
 
 #endif // ZEROGAME_H
