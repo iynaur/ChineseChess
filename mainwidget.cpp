@@ -60,6 +60,6 @@ void MainWidget::on_pushButton_5_clicked()
 {
 
   ZeroGame* zero = dynamic_cast<ZeroGame*>(widget);
-  zero->computerMoveStart();
-//  zero->computerOneMove();
+//  zero->computerMoveStart();
+  zero->computerOneMove();
 }
