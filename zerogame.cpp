@@ -36,13 +36,10 @@ void ZeroGame::computerOneMove()
 
 void ZeroGame::computerRedMove(){
   if (whoWinTheGame()) return;
-  if (m_lastMove)
-  {
-    delete m_lastMove;
-    m_lastMove = nullptr;
-  }
+
     m_lastMove = this->getBestRedMove();
     if (!m_lastMove) return;
+    lastRedMove = m_lastMove;
     this->moveStone(m_lastMove->_moveid, m_lastMove->_killid, m_lastMove->_rowTo, m_lastMove->_colTo);
     this->restartGame();
     selected = -1;

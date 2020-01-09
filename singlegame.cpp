@@ -58,11 +58,7 @@ void SingleGame::paintEvent(QPaintEvent *e)
 }
 void SingleGame::computerMove(){
   if (whoWinTheGame()) return;
-  if (m_lastMove)
-  {
-    delete m_lastMove;
-    m_lastMove = nullptr;
-  }
+
     m_lastMove = this->getBestMove();
     if (!m_lastMove) return;
     this->moveStone(m_lastMove->_moveid, m_lastMove->_killid, m_lastMove->_rowTo, m_lastMove->_colTo);
@@ -71,8 +67,8 @@ void SingleGame::computerMove(){
     update();
 }
 
-void SingleGame::saveAllPossibleMove(int moveid, int killid, int row, int col, QVector<Step *>& steps){
-    Step* step = new Step;
+void SingleGame::saveAllPossibleMove(int moveid, int killid, int row, int col, QVector<std::shared_ptr<Step>>& steps){
+    std::shared_ptr<Step> step(new Step);
     step->_colFrom = stone[moveid].getCol();
     step->_colTo = col;
     step->_rowFrom = stone[moveid].getRow();
@@ -81,7 +77,7 @@ void SingleGame::saveAllPossibleMove(int moveid, int killid, int row, int col, Q
     step->_killid = killid;
     steps.push_back(step);
 }
-void SingleGame::getALLPossibleMove(QVector<Step *> & steps){
+void SingleGame::getALLPossibleMove(QVector<std::shared_ptr<Step>> & steps){
     if ((whoWinTheGame() == Stone::RED && !this->bRedTurn) ||
             (whoWinTheGame() == Stone::BLACK && this->bRedTurn)) return;
 
@@ -133,12 +129,12 @@ int SingleGame::getMinScore(int level , int curMaxScore){
     if(!bRedTurn) throw(-1);
     if(level == 0) return this->calScore();
 
-    QVector<Step*>steps ;
+    QVector<std::shared_ptr<Step>>steps ;
     //1.get all possible move steps
     this->getALLPossibleMove(steps);
     int minScore = std::numeric_limits<int>::max();
     while (steps.count()) {
-        Step * step = steps.back() ;
+        std::shared_ptr<Step> step = steps.back() ;
         steps.removeLast();
 
         fakeMove(step);
@@ -147,12 +143,10 @@ int SingleGame::getMinScore(int level , int curMaxScore){
         int score = getMaxScore(level-1,minScore);
         unfakeMove(step);
 
-        delete step;
         if(score <= curMaxScore){
              while (steps.count()) {
-                 Step * step = steps.back() ;
+                 std::shared_ptr<Step> step = steps.back() ;
                  steps.removeLast();
-                 delete step ;
              }
             return std::max(score, INT_MIN+1) -1;
         }
@@ -169,7 +163,7 @@ int SingleGame::getMaxScore(int level,int curMinScore){
     if(bRedTurn) throw(-1);
     if(level == 0) return this->calScore();
 
-    QVector<Step*>steps ;
+    QVector<std::shared_ptr<Step>>steps ;
     //1.get all possible move steps
     this->getALLPossibleMove(steps);
     int maxScore = std::numeric_limits<int>::min();
@@ -184,20 +178,18 @@ int SingleGame::getMaxScore(int level,int curMinScore){
 //        std::cerr<<"and black sh live!\n";
 //    }
     while (steps.count()) {
-        Step * step = steps.back() ;
+        std::shared_ptr<Step> step = steps.back() ;
         steps.removeLast();
 
         fakeMove(step);
         //3.assess each step
         int score = getMinScore(level-1,maxScore);
         unfakeMove(step);
-        delete step ;
 
         if(score >= curMinScore){//can not both contain ==?
             while (steps.count()) {
-                Step * step = steps.back() ;
+                std::shared_ptr<Step> step = steps.back() ;
                 steps.removeLast();
-                delete step ;
             }
             if (level == 3)
                 return std::min(score, INT_MAX-1)+1;
@@ -216,14 +208,14 @@ int SingleGame::getMaxScore(int level,int curMinScore){
         return maxScore;
 }
 
-Step* SingleGame::getBestMove(){
+std::shared_ptr<Step> SingleGame::getBestMove(){
     if (bRedTurn) throw(-1);
     //computer move
-    QVector<Step*>steps ;
+    QVector<std::shared_ptr<Step>>steps ;
     //1.get all possible move steps
     this->getALLPossibleMove(steps);
     {
-      std::vector<Step*> stlsteps;
+      std::vector<std::shared_ptr<Step>> stlsteps;
       for (auto step : steps) stlsteps.push_back(step);
 
       auto rng = std::default_random_engine {};
@@ -235,9 +227,9 @@ Step* SingleGame::getBestMove(){
 
     //2.try to move
     int maxScore = std::numeric_limits<int>::min();
-    Step * realstp = NULL;
+    std::shared_ptr<Step> realstp = NULL;
     while (steps.count()) {
-        Step * step = steps.back() ;
+        std::shared_ptr<Step> step = steps.back() ;
         steps.removeLast();
 
         fakeMove(step);
@@ -246,10 +238,7 @@ Step* SingleGame::getBestMove(){
 
         if(!(score < maxScore)){
             maxScore = score ;
-            if(realstp != NULL) delete realstp;
             realstp = step ;
-        }else{
-            delete step ;
         }
     }
     //get best move step
@@ -257,16 +246,16 @@ Step* SingleGame::getBestMove(){
     return realstp ;
 }
 
-Step *SingleGame::getBestRedMove()
+std::shared_ptr<Step>SingleGame::getBestRedMove()
 {
     if (!bRedTurn) throw(-1);
 
   //computer move
-  QVector<Step*>steps ;
+  QVector<std::shared_ptr<Step>>steps ;
   //1.get all possible move steps
   this->getALLPossibleMove(steps);
   if (1){
-    std::vector<Step*> stlsteps;
+    std::vector<std::shared_ptr<Step>> stlsteps;
     for (auto step : steps) stlsteps.push_back(step);
 
     auto rng = std::default_random_engine {};
@@ -278,9 +267,9 @@ Step *SingleGame::getBestRedMove()
 
   //2.try to move
   int minScore = std::numeric_limits<int>::max();
-  Step * realstp = NULL;
+  std::shared_ptr<Step> realstp = NULL;
   while (steps.count()) {
-      Step * step = steps.back() ;
+      std::shared_ptr<Step> step = steps.back() ;
       steps.removeLast();
 
       fakeMove(step);
@@ -290,10 +279,7 @@ Step *SingleGame::getBestRedMove()
 
       if(score <= minScore){//why this is wrong
           minScore = score ;
-          if(realstp != NULL) delete realstp;
           realstp = step ;
-      }else{
-          delete step ;
       }
   }
   //get best move step

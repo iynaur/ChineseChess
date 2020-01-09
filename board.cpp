@@ -261,7 +261,7 @@ bool Board::isRegularMovement(int selectid, int row, int col, int killid)
           {
 
 
-            Step* step = new Step;
+            std::shared_ptr<Step> step(new Step);
             step->_colFrom = stone[selectid].getCol();
             step->_colTo = col;
             step->_rowFrom = stone[selectid].getRow();
@@ -545,7 +545,7 @@ void Board::reliveStone(int id){
     }
 }
 
-void Board::back(Step *step){
+void Board::back(std::shared_ptr<Step>step){
     reliveStone(step->_killid);
     moveStone(step->_moveid, step->_rowFrom, step->_colFrom);
 }
@@ -570,11 +570,10 @@ void Board::initCanMove()
 
 void Board::backOne(){
     if(!steps.isEmpty()){
-        Step* step = this->steps.last();
+        std::shared_ptr<Step> step = this->steps.last();
         steps.removeLast();
         back(step);
         update();
-        delete step;
     }
 }
 
@@ -649,7 +648,7 @@ void Board::moveStone(int moveid, int killid, int row, int col){
 }
 
 void Board::saveStep(int moveid, int killid, int row, int col){
-    Step* step = new Step;
+    std::shared_ptr<Step> step(new Step);
     step->_colFrom = stone[moveid].getCol();
     step->_colTo = col;
     step->_rowFrom = stone[moveid].getRow();
@@ -671,12 +670,12 @@ void Board::moveStone(int moveid, int row, int col){
     bRedTurn = !bRedTurn;
 }
 
-void Board::fakeMove(Step *step){
+void Board::fakeMove(std::shared_ptr<Step>step){
     // smiliar move step
     this->killStone(step->_killid);
     this->moveStone(step->_moveid,step->_rowTo,step->_colTo);
 }
-void Board::unfakeMove(Step *step){
+void Board::unfakeMove(std::shared_ptr<Step>step){
     //smiliar back step
     this->reliveStone(step->_killid);
     this->moveStone(step->_moveid, step->_rowFrom, step->_colFrom);

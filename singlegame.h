@@ -16,10 +16,10 @@ public:
     void click(int id, int row, int col);
     void paintEvent(QPaintEvent *) override;
 
-    Step* getBestMove();
-    Step* getBestRedMove();
-    void getALLPossibleMove(QVector<Step *> & );
-    void saveAllPossibleMove(int moveid,int killid,int row ,int col ,QVector<Step *> &);
+    std::shared_ptr<Step> getBestMove();
+    std::shared_ptr<Step> getBestRedMove();
+    void getALLPossibleMove(QVector<std::shared_ptr<Step>> & );
+    void saveAllPossibleMove(int moveid,int killid,int row ,int col ,QVector<std::shared_ptr<Step>> &);
 
     int calScore();
     int getMinScore(int level,int curMaxScore);
@@ -27,7 +27,7 @@ public:
 
 protected:
     int level ;
-    Step* m_lastMove = nullptr;
+    std::shared_ptr<Step> m_lastMove = nullptr;
 
 signals:
 

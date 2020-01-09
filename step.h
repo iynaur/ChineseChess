@@ -2,7 +2,7 @@
 #define STEP_H
 
 
-#include <QObject>
+#include <memory>
 
 class Step
 {

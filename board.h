@@ -48,10 +48,10 @@ public:
     virtual void back();
     void reliveStone(int id);
     void backOne();
-    void back(Step *step);
+    void back(std::shared_ptr<Step> step);
     void initCanMove();
-    void fakeMove(Step *);
-    void unfakeMove(Step *);
+    void fakeMove(std::shared_ptr<Step>);
+    void unfakeMove(std::shared_ptr<Step>);
 
     bool bRedTurn ;
 
@@ -59,7 +59,7 @@ protected:
     Stone stone[32];
     int selected ;
     int d ;
-    QVector<Step *> steps ;
+    QVector<std::shared_ptr<Step>> steps ;
 
     std::vector<std::vector<bool>> m_canMove;
     bool m_bHasMoved = false;
