@@ -149,7 +149,7 @@ std::pair<int, int> SingleGame::getMinScore(int level , int curMaxScore){
                  std::shared_ptr<Step> step = steps.back() ;
                  steps.removeLast();
              }
-             return {std::max(score.first, INT_MIN+1) -1, level};
+             return {std::max(score.first, INT_MIN+1) -1, -1};
         }
         if(score.first < minScore.first){
             minScore = score ;
@@ -193,9 +193,9 @@ std::pair<int, int> SingleGame::getMaxScore(int level,int curMinScore){
                 steps.removeLast();
             }
             if (level == 3)
-              return {std::min(score.first, INT_MAX-1)+1, level};
+              return {std::min(score.first, INT_MAX-1)+1, -1};
             else
-                return {std::min(score.first, INT_MAX-1)+1, level};
+                return {std::min(score.first, INT_MAX-1)+1, -1};
             return score;
         }
         if(score.first > maxScore.first){
@@ -219,7 +219,8 @@ std::shared_ptr<Step> SingleGame::getBestMove(){
       std::vector<std::shared_ptr<Step>> stlsteps;
       for (auto step : steps) stlsteps.push_back(step);
 
-      auto rng = std::default_random_engine {};
+      unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+      auto rng = std::default_random_engine {seed};
       std::shuffle(std::begin(stlsteps), std::end(stlsteps), rng);
       steps.clear();
       for (auto step : stlsteps) steps.push_back(step);
