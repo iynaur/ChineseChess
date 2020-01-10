@@ -12,7 +12,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = CHINACHESSS
 TEMPLATE = app
 
-win32{
+win32-msvc*{
 QMAKE_CXXFLAGS += /utf-8
 }
 
