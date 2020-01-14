@@ -21,7 +21,11 @@ MainWidget::~MainWidget()
     delete ui;
 }
 
-void MainWidget::on_pushButton_clicked()
+void MainWidget::initHuman(humanPlayer* &human, Stone::COLOR color){
+  human = new humanPlayer(m_board, color);
+}
+
+void MainWidget::on_pushButton_clicked()//p vs p
 {
 
 }

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "aiplayer.h"
+#include "humanplayer.h"
 
 class Board;
 
@@ -18,6 +19,7 @@ public:
     ~MainWidget();
 
   void initAi(aiPlayer *&ai, Stone::COLOR color);
+  void initHuman(humanPlayer *&human, Stone::COLOR color);
 private slots:
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
@@ -29,6 +31,7 @@ private:
     Ui::MainWidget *ui;
     Board* m_board;
     aiPlayer* m_redAi, *m_blackAi;
+    humanPlayer* m_redHuman, *m_blackHuman;
 };
 
 #endif // MAINWIDGET_H
