@@ -39,9 +39,6 @@ SOURCES += \
     board.cpp \
     stone.cpp \
     step.cpp \
-    multigame.cpp \
-    singlegame.cpp \
-  zerogame.cpp
 
 HEADERS += \
   aiplayer.h \
@@ -51,9 +48,6 @@ HEADERS += \
     board.h \
     stone.h \
     step.h \
-    multigame.h \
-    singlegame.h \
-  zerogame.h
 
 FORMS += \
         mainwidget.ui

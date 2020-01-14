@@ -185,6 +185,44 @@ void Board::paintEvent(QPaintEvent *){
                 if (m_canMove[i][j]) drawPostion((i+1)*d,(j +1)*d,r,pen);
             }
     }
+
+    //draw last move
+    if (m_lastMove){
+      auto drawStone =[this](int id){
+        QPainter pen(this);
+        if(!stone[id].getIsDead()){
+
+          pen.setBrush(Qt::gray);
+          QFont serifFont("Times", 20, QFont::Bold);
+          pen.setFont(serifFont);
+          if(stone[id].color == Stone::RED){
+            pen.setPen(Qt::red);
+            pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2,d/2);
+            pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-1,d/2-1);
+            pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-2,d/2-2);
+            pen.drawText(QRectF(stone[id].getRow()-20,stone[id].getCol()-20,40,40),Qt::AlignCenter,stone[id].getSoneName());
+          }else{
+            pen.setPen(Qt::black);
+            pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2,d/2);
+            pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-1,d/2-1);
+            pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-2,d/2-2);
+            pen.drawText(QRectF(stone[id].getRow()-20,stone[id].getCol()-20,40,40),Qt::AlignCenter,stone[id].getSoneName());
+          }
+
+          {
+
+            pen.setPen(Qt::lightGray);
+            pen.setBrush(Qt::lightGray);
+            pen.drawEllipse(QPoint(m_lastMove->_rowFrom, m_lastMove->_colFrom),d/2,d/2);
+  //          pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-1,d/2-1);
+  //          pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-2,d/2-2);
+//            pen.drawText(QRectF(m_lastMove->_rowFrom-20,m_lastMove->_colFrom-20,40,40),Qt::AlignCenter,stone[id].getSoneName());
+          }
+        }
+      };
+      drawStone(m_lastMove->_moveid);
+    }
+
 }
 
 QPoint& Board::getRowCol(QPoint &pen){

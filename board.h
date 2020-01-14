@@ -42,7 +42,6 @@ public:
     void moveStone(int moveid, int killid, int row, int col);
     void saveStep(int moveid, int killid, int row, int col);
     void killStone(int id);
-    void moveStone(int moveid, int row, int col);
 
     //
     virtual void back();
@@ -56,6 +55,7 @@ public:
     bool bRedTurn ;
     Stone stone[32];
     int selected ;
+    std::shared_ptr<Step> m_lastMove = nullptr;
 
     void getALLPossibleMove(QVector<std::shared_ptr<Step> > &steps);
     void saveAllPossibleMove(int moveid, int killid, int row, int col, QVector<std::shared_ptr<Step> > &steps);
@@ -67,6 +67,7 @@ protected:
     bool m_bHasMoved = false;
 
 private:
+    void moveStone(int moveid, int row, int col);
     void drawPostion(int x ,int y,int r,QPainter &pen);
     void initStone();
 

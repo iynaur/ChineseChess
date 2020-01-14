@@ -1,10 +1,7 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
-#include "multigame.h"
 #include <QImage>
 #include <QPixmap>
-#include "singlegame.h"
-#include "zerogame.h"
 #include <iostream>
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
@@ -51,7 +48,7 @@ void MainWidget::initAi(aiPlayer* &ai, Stone::COLOR color){
   {
 //    if (whoWinTheGame()) return;
 
-
+      m_board->m_lastMove = step;
       m_board->moveStone(step->_moveid, step->_killid, step->_rowTo, step->_colTo);
       m_board->restartGame();
       m_board->selected = -1;
