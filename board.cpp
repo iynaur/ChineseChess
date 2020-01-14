@@ -16,7 +16,7 @@ Board::Board(QWidget *parent) : QWidget(parent)
     this->setWindowTitle(QString("中国象棋"));
 
     m_canMove = std::vector< std::vector <bool>> (8, std::vector <bool>(9, false));
-    resize(500.0/40*d, 450.0/40*d);
+    resize(11*d, 10*d);
 
     QBoxLayout * layout = new QBoxLayout(QBoxLayout::RightToLeft);
     QPushButton *back = new QPushButton("Back");
@@ -680,3 +680,40 @@ void Board::unfakeMove(std::shared_ptr<Step>step){
     this->reliveStone(step->_killid);
     this->moveStone(step->_moveid, step->_rowFrom, step->_colFrom);
 }
+
+void Board::getALLPossibleMove(QVector<std::shared_ptr<Step>> & steps){
+    if ((whoWinTheGame() == Stone::RED && !this->bRedTurn) ||
+            (whoWinTheGame() == Stone::BLACK && this->bRedTurn)) return;
+
+    //id [16,31] is black
+    int min = 16 ;
+    int max = 32 ;
+    if(this->bRedTurn){
+         //id [0,15] is red
+        min = 0 ;
+        max = 16 ;
+    }
+    for(int i = min ; i < max ; i++){
+        if(this->stone[i].getIsDead())continue;
+        for(int row = 1 ; row <= 9 ; row ++){
+            for(int col = 1 ; col <= 10 ; col ++){
+                int killid = this->getStoneId(row *d,col*d);
+                if(this->isRegularMovement(i,row*d,col*d,killid)){
+                    this->saveAllPossibleMove(i,killid,row*d,col*d,steps);
+                }
+            }
+        }
+    }
+}
+
+void Board::saveAllPossibleMove(int moveid, int killid, int row, int col, QVector<std::shared_ptr<Step>>& steps){
+    std::shared_ptr<Step> step(new Step);
+    step->_colFrom = stone[moveid].getCol();
+    step->_colTo = col;
+    step->_rowFrom = stone[moveid].getRow();
+    step->_rowTo = row;
+    step->_moveid = moveid;
+    step->_killid = killid;
+    steps.push_back(step);
+}
+

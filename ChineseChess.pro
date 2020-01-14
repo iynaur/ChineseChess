@@ -31,6 +31,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+  aiplayer.cpp \
+  chessplayer.cpp \
         main.cpp \
         mainwidget.cpp \
     board.cpp \
@@ -41,6 +43,8 @@ SOURCES += \
   zerogame.cpp
 
 HEADERS += \
+  aiplayer.h \
+  chessplayer.h \
         mainwidget.h \
     board.h \
     stone.h \

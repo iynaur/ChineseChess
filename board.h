@@ -54,10 +54,12 @@ public:
     void unfakeMove(std::shared_ptr<Step>);
 
     bool bRedTurn ;
-
-protected:
     Stone stone[32];
     int selected ;
+
+    void getALLPossibleMove(QVector<std::shared_ptr<Step> > &steps);
+    void saveAllPossibleMove(int moveid, int killid, int row, int col, QVector<std::shared_ptr<Step> > &steps);
+protected:
     int d ;
     QVector<std::shared_ptr<Step>> steps ;
 
