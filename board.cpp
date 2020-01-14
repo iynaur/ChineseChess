@@ -26,33 +26,33 @@ Board::Board(QWidget *parent) : QWidget(parent)
     this->setLayout(layout);
     connect(back, SIGNAL(clicked()), this, SLOT(slotBack()));
 }
-void Board::drawPostion(int x, int y,int r ,QPainter &pen){
+void Board::drawPostion(int x, int y,int r ,QPainter &painter){
     if(x == d){
-        pen.drawLine(QPoint(x+r,y-r),QPoint(x+r,y-2*r));
-        pen.drawLine(QPoint(x+r,y-r),QPoint(x+2*r,y-r));
+        painter.drawLine(QPoint(x+r,y-r),QPoint(x+r,y-2*r));
+        painter.drawLine(QPoint(x+r,y-r),QPoint(x+2*r,y-r));
 
-        pen.drawLine(QPoint(x+r,y+r),QPoint(x+r,y+2*r));
-        pen.drawLine(QPoint(x+r,y+r),QPoint(x+2*r,y+r));
+        painter.drawLine(QPoint(x+r,y+r),QPoint(x+r,y+2*r));
+        painter.drawLine(QPoint(x+r,y+r),QPoint(x+2*r,y+r));
     }
     else if( x == 9*d){
-        pen.drawLine(QPoint(x-r,y-r),QPoint(x-r,y-2*r));
-        pen.drawLine(QPoint(x-r,y-r),QPoint(x-2*r,y-r));
+        painter.drawLine(QPoint(x-r,y-r),QPoint(x-r,y-2*r));
+        painter.drawLine(QPoint(x-r,y-r),QPoint(x-2*r,y-r));
 
-        pen.drawLine(QPoint(x-r,y+r),QPoint(x-r,y+2*r));
-        pen.drawLine(QPoint(x-r,y+r),QPoint(x-2*r,y+r));
+        painter.drawLine(QPoint(x-r,y+r),QPoint(x-r,y+2*r));
+        painter.drawLine(QPoint(x-r,y+r),QPoint(x-2*r,y+r));
 
     }else{
-        pen.drawLine(QPoint(x-r,y-r),QPoint(x-r,y-2*r));
-        pen.drawLine(QPoint(x-r,y-r),QPoint(x-2*r,y-r));
+        painter.drawLine(QPoint(x-r,y-r),QPoint(x-r,y-2*r));
+        painter.drawLine(QPoint(x-r,y-r),QPoint(x-2*r,y-r));
 
-        pen.drawLine(QPoint(x+r,y-r),QPoint(x+r,y-2*r));
-        pen.drawLine(QPoint(x+r,y-r),QPoint(x+2*r,y-r));
+        painter.drawLine(QPoint(x+r,y-r),QPoint(x+r,y-2*r));
+        painter.drawLine(QPoint(x+r,y-r),QPoint(x+2*r,y-r));
 
-        pen.drawLine(QPoint(x+r,y+r),QPoint(x+2*r,y+r));
-        pen.drawLine(QPoint(x+r,y+r),QPoint(x+r,y+2*r));
+        painter.drawLine(QPoint(x+r,y+r),QPoint(x+2*r,y+r));
+        painter.drawLine(QPoint(x+r,y+r),QPoint(x+r,y+2*r));
 
-        pen.drawLine(QPoint(x-r,y+r),QPoint(x-2*r,y+r));
-        pen.drawLine(QPoint(x-r,y+r),QPoint(x-r,y+2*r));
+        painter.drawLine(QPoint(x-r,y+r),QPoint(x-2*r,y+r));
+        painter.drawLine(QPoint(x-r,y+r),QPoint(x-r,y+2*r));
     }
 }
 void Board::initStone(){
@@ -98,24 +98,24 @@ void Board::initStone(){
     stone[30] = Stone(2*d,3*d,30,false,Stone::BLACK,Stone::BLACKPAO);
     stone[31] = Stone(8*d,3*d,31,false,Stone::BLACK,Stone::BLACKPAO);
 }
-void Board::drawStone(int id,QPainter &pen){
+void Board::drawStone(int id,QPainter &painter){
     if(!stone[id].getIsDead()){
         if(selected == id){
-            pen.setBrush(Qt::gray);
-        }else pen.setBrush(QBrush(Qt::yellow));
+            painter.setBrush(Qt::gray);
+        }else painter.setBrush(QBrush(Qt::yellow));
 
          QFont serifFont("Times", 20, QFont::Bold);
-         pen.setFont(serifFont);
+         painter.setFont(serifFont);
         if(stone[id].color == Stone::RED){
-            pen.setPen(QPen(Qt::red, 3));
+            painter.setPen(QPen(Qt::red, 3));
 
-            pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-2,d/2-2);
-            pen.drawText(QRectF(stone[id].getRow()-20,stone[id].getCol()-20,40,40),Qt::AlignCenter,stone[id].getSoneName());
+            painter.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-2,d/2-2);
+            painter.drawText(QRectF(stone[id].getRow()-20,stone[id].getCol()-20,40,40),Qt::AlignCenter,stone[id].getSoneName());
         }else{
-            pen.setPen(QPen(Qt::black, 3));
+            painter.setPen(QPen(Qt::black, 3));
 
-            pen.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-2,d/2-2);
-            pen.drawText(QRectF(stone[id].getRow()-20,stone[id].getCol()-20,40,40),Qt::AlignCenter,stone[id].getSoneName());
+            painter.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-2,d/2-2);
+            painter.drawText(QRectF(stone[id].getRow()-20,stone[id].getCol()-20,40,40),Qt::AlignCenter,stone[id].getSoneName());
         }
     }
 }
@@ -124,82 +124,82 @@ void Board::mouseReleaseEvent(QMouseEvent * ev){
 }
 
 void Board::paintEvent(QPaintEvent *){
-    QPainter pen(this);
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
     int r = 5 ;
     for(int i = 1 ; i <= 10 ; i++){
-        pen.drawLine(QPoint(d,i*d),QPoint(9*d,i*d));
+        painter.drawLine(QPoint(d,i*d),QPoint(9*d,i*d));
     }
 
     for(int i = 1 ; i <= 9 ; i ++){
         if(i >=2 && i <= 8){
-            pen.drawLine(QPoint(i*d,d),QPoint(i*d,5*d));
-            pen.drawLine(QPoint(i*d,6*d),QPoint(i*d,10*d));
+            painter.drawLine(QPoint(i*d,d),QPoint(i*d,5*d));
+            painter.drawLine(QPoint(i*d,6*d),QPoint(i*d,10*d));
 
         }else{
-            pen.drawLine(QPoint(i*d,d),QPoint(i*d,10*d));
+            painter.drawLine(QPoint(i*d,d),QPoint(i*d,10*d));
         }
     }
 
-    pen.drawLine(QPoint(4*d,d),QPoint(6*d,3*d));
-    pen.drawLine(QPoint(4*d,3*d),QPoint(6*d,d));
+    painter.drawLine(QPoint(4*d,d),QPoint(6*d,3*d));
+    painter.drawLine(QPoint(4*d,3*d),QPoint(6*d,d));
 
-    pen.drawLine(QPoint(4*d,8*d),QPoint(6*d,10*d));
-    pen.drawLine(QPoint(4*d,10*d),QPoint(6*d,8*d));
+    painter.drawLine(QPoint(4*d,8*d),QPoint(6*d,10*d));
+    painter.drawLine(QPoint(4*d,10*d),QPoint(6*d,8*d));
 
-    pen.drawText(QRectF(QRect(2.3*d,5*d+5,d,d)),QString("楚"));
-    pen.drawText(QRectF(QRect(3.3*d,5*d+5,d,d)),QString("河"));
-    pen.drawText(QRectF(QRect(6.3*d,5*d+5,d,d)),QString("汉"));
-    pen.drawText(QRectF(QRect(7.3*d,5*d+5,d,d)),QString("界"));
+    painter.drawText(QRectF(QRect(2.3*d,5*d+5,d,d)),QString("楚"));
+    painter.drawText(QRectF(QRect(3.3*d,5*d+5,d,d)),QString("河"));
+    painter.drawText(QRectF(QRect(6.3*d,5*d+5,d,d)),QString("汉"));
+    painter.drawText(QRectF(QRect(7.3*d,5*d+5,d,d)),QString("界"));
 
-    drawPostion(d,4*d,r,pen);
-    drawPostion(9*d,4*d,r,pen);
-    drawPostion(d,7*d,r,pen);
-    drawPostion(9*d,7*d,r,pen);
+    drawPostion(d,4*d,r,painter);
+    drawPostion(9*d,4*d,r,painter);
+    drawPostion(d,7*d,r,painter);
+    drawPostion(9*d,7*d,r,painter);
 
-    drawPostion(2*d,3*d,r,pen);
-    drawPostion(8*d,3*d,r,pen);
-    drawPostion(2*d,8*d,r,pen);
-    drawPostion(8*d,8*d,r,pen);
+    drawPostion(2*d,3*d,r,painter);
+    drawPostion(8*d,3*d,r,painter);
+    drawPostion(2*d,8*d,r,painter);
+    drawPostion(8*d,8*d,r,painter);
 
-    drawPostion(3*d,4*d,r,pen);
-    drawPostion(5*d,4*d,r,pen);
-    drawPostion(7*d,4*d,r,pen);
+    drawPostion(3*d,4*d,r,painter);
+    drawPostion(5*d,4*d,r,painter);
+    drawPostion(7*d,4*d,r,painter);
 
-    drawPostion(3*d,7*d,r,pen);
-    drawPostion(5*d,7*d,r,pen);
-    drawPostion(7*d,7*d,r,pen);
+    drawPostion(3*d,7*d,r,painter);
+    drawPostion(5*d,7*d,r,painter);
+    drawPostion(7*d,7*d,r,painter);
 
     for(int i = 0 ; i < 32 ; i++){
-        drawStone(i,pen);
+        drawStone(i,painter);
     }
 
     if (!m_bHasMoved)
     {
         QPen line( QBrush(Qt::red), 3);
-        pen.setPen(line);
+        painter.setPen(line);
         for (int i = 0; i < m_canMove.size(); ++i)
             for (int j = 0; j < m_canMove[i].size(); ++j)
             {
-                if (m_canMove[i][j]) drawPostion((i+1)*d,(j +1)*d,r,pen);
+                if (m_canMove[i][j]) drawPostion((i+1)*d,(j +1)*d,r,painter);
             }
     }
 
     //draw last move
     if (m_lastMove){
-      auto drawStone =[this](int id){
-        QPainter pen(this);
+      auto drawStone =[&](int id){
         if(!stone[id].getIsDead()){
 
-          pen.setBrush(Qt::gray);
+          painter.setBrush(Qt::gray);
           QFont serifFont("Times", 20, QFont::Bold);
-          pen.setFont(serifFont);
+          painter.setFont(serifFont);
 
           {
 
-            pen.setPen(Qt::lightGray);
-            pen.setBrush(Qt::lightGray);
-            pen.drawEllipse(QPoint(m_lastMove->_rowFrom, m_lastMove->_colFrom),d/2,d/2);
+            painter.setPen(Qt::lightGray);
+            painter.setBrush(Qt::lightGray);
+            painter.drawEllipse(QPoint(m_lastMove->_rowFrom, m_lastMove->_colFrom),d/2,d/2);
           }
         }
       };

@@ -19,7 +19,7 @@ public:
 
     QPoint& getRowCol(QPoint &pen);
 
-    void drawStone(int id,QPainter &pen);
+    void drawStone(int id, QPainter &painter);
     bool isRegularMovement(int selectid ,int row,int col,int killid);
     bool maybeRegularMovement(int selectid ,int row,int col,int killid);
 
@@ -68,7 +68,7 @@ protected:
 
 private:
     void moveStone(int moveid, int row, int col);
-    void drawPostion(int x ,int y,int r,QPainter &pen);
+    void drawPostion(int x , int y, int r, QPainter &painter);
     void initStone();
 
     bool isEXistPieceInLine(int selectid,int row,int col);
