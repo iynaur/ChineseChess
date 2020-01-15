@@ -194,6 +194,17 @@ void Board::paintEvent(QPaintEvent *){
           painter.setBrush(Qt::gray);
           QFont serifFont("Times", 20, QFont::Bold);
           painter.setFont(serifFont);
+          if(stone[id].color == Stone::RED){
+                      painter.setPen(QPen(Qt::red, 3));
+
+                      painter.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-2,d/2-2);
+                      painter.drawText(QRectF(stone[id].getRow()-20,stone[id].getCol()-20,40,40),Qt::AlignCenter,stone[id].getSoneName());
+                    }else{
+                      painter.setPen(QPen(Qt::black, 3));
+
+                      painter.drawEllipse(QPoint(stone[id].getRow(),stone[id].getCol()),d/2-2,d/2-2);
+                      painter.drawText(QRectF(stone[id].getRow()-20,stone[id].getCol()-20,40,40),Qt::AlignCenter,stone[id].getSoneName());
+                    }
 
           {
 
