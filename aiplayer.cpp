@@ -1,6 +1,7 @@
 #include "aiplayer.h"
 #include <assert.h>
 #include <iostream>
+#include <random>
 
 aiPlayer::aiPlayer(Board *board, Stone::COLOR color)
   : chessPlayer(board, color)
